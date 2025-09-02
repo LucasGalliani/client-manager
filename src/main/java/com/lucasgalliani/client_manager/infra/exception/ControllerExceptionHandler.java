@@ -1,0 +1,24 @@
+package com.lucasgalliani.client_manager.infra.exception;
+
+import com.lucasgalliani.client_manager.dto.ExceptionDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class ControllerExceptionHandler {
+
+    @ExceptionHandler(CpfNuloException.class)
+    public ResponseEntity cpfNotNull(CpfNuloException ex) {
+        ExceptionDto exceptionDto = new ExceptionDto("CPF não pode ser nulo ou vazio!", "500");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionDto);
+    }
+
+    @ExceptionHandler(CpfJaCadastradoException.class)
+    public ResponseEntity duplicatedCpf(CpfJaCadastradoException ex) {
+        ExceptionDto exceptionDto = new ExceptionDto("CPF não pode ser nulo ou vazio!", "500");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionDto);
+    }
+
+}
