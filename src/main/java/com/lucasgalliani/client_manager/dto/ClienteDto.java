@@ -10,6 +10,8 @@ public record ClienteDto(
         @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{11}",
                 message = "CPF inválido")
         String cpf,
+        @NotBlank
+        String nome,
         String email,
         Integer idade,
         LocalDate dataNascimento,

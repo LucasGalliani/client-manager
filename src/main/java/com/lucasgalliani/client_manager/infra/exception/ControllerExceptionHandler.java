@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ControllerExceptionHandler {
 
     @ExceptionHandler(CpfNuloException.class)
-    public ResponseEntity cpfNotNull(CpfNuloException ex) {
-        ExceptionDto exceptionDto = new ExceptionDto("CPF não pode ser nulo ou vazio!", "500");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionDto);
+    public ResponseEntity<ExceptionDto> cpfNotNull(CpfNuloException ex) {
+        ExceptionDto exceptionDto = new ExceptionDto("CPF não pode ser nulo ou vazio!", "400");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionDto);
     }
 
     @ExceptionHandler(CpfJaCadastradoException.class)
-    public ResponseEntity duplicatedCpf(CpfJaCadastradoException ex) {
-        ExceptionDto exceptionDto = new ExceptionDto("CPF não pode ser nulo ou vazio!", "500");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionDto);
+    public ResponseEntity<ExceptionDto> duplicatedCpf(CpfJaCadastradoException ex) {
+        ExceptionDto exceptionDto = new ExceptionDto("CPF já cadastrado!", "400");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionDto);
     }
 
 }

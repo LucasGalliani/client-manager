@@ -2,6 +2,8 @@ package com.lucasgalliani.client_manager.service;
 
 import com.lucasgalliani.client_manager.dto.ClienteDto;
 import com.lucasgalliani.client_manager.dto.ClienteResponseDto;
+import com.lucasgalliani.client_manager.infra.exception.CpfJaCadastradoException;
+import com.lucasgalliani.client_manager.infra.exception.CpfNuloException;
 import com.lucasgalliani.client_manager.mapper.ClienteMapper;
 import com.lucasgalliani.client_manager.model.Cliente;
 import com.lucasgalliani.client_manager.model.Endereco;
@@ -22,6 +24,13 @@ public class ClienteService {
     @Transactional
     public ClienteResponseDto cadastrarCliente(ClienteDto dto) {
 
+        if (dto.cpf() == null || dto.cpf().trim().isEmpty()) {
+            throw new CpfNuloException("CPF não pode ser vazio!");
+        }
+
+        if(clienteRepository.existsByCpf(dto.cpf())){
+            throw new CpfJaCadastradoException("CPF já cadastrado!");
+        }
 
         Cliente cliente = new Cliente();
         cliente.setCpf(dto.cpf());
@@ -40,8 +49,8 @@ public class ClienteService {
 
         cliente.setEndereco(endereco);
 
-        Cliente saved = clienteRepository.save(cliente);
+        Cliente save = clienteRepository.save(cliente);
 
-        return clienteMapper.toResponse(saved);
+        return clienteMapper.toResponse(save);
     }
 }
