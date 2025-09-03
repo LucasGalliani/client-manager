@@ -12,6 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 public class ClienteService {
 
@@ -33,6 +37,7 @@ public class ClienteService {
         }
 
         Cliente cliente = new Cliente();
+        cliente.setNome(dto.nome());
         cliente.setCpf(dto.cpf());
         cliente.setEmail(dto.email());
         cliente.setIdade(dto.idade());
@@ -53,4 +58,23 @@ public class ClienteService {
 
         return clienteMapper.toResponse(save);
     }
+
+    public List<ClienteResponseDto> listarTodosClientes(){
+
+        return clienteRepository.findAll()
+                .stream()
+                .map(clienteMapper::toResponse)
+                .collect(Collectors.toList());
+
+    }
+
+    public ClienteResponseDto listarPorCpf(String cpf){
+
+        Cliente cliente = clienteRepository.findByCpf(cpf)
+                .orElseThrow(() -> new CpfNuloException("CPF não encontrado: " + cpf));
+
+        return clienteMapper.toResponse(cliente);
+
+    }
+
 }

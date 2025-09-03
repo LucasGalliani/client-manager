@@ -7,10 +7,9 @@ import com.lucasgalliani.client_manager.service.ClienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -20,7 +19,17 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @PostMapping("/cadastro")
-    public ResponseEntity<ClienteResponseDto> cadastrar(@RequestBody @Valid ClienteDto clienteDto) {
+    public ResponseEntity<ClienteResponseDto> cadastrarClientes(@RequestBody @Valid ClienteDto clienteDto) {
         return ResponseEntity.ok(clienteService.cadastrarCliente(clienteDto));
+    }
+
+    @GetMapping("/listar")
+    public ResponseEntity<List<ClienteResponseDto>> obterTodosOsClientes() {
+        return ResponseEntity.ok(clienteService.listarTodosClientes());
+    }
+
+    @GetMapping("/listar/{cpf}")
+    public ResponseEntity<ClienteResponseDto> obterTodosOsClientesPorCpf(@PathVariable String cpf) {
+        return ResponseEntity.ok(clienteService.listarPorCpf(cpf));
     }
 }
