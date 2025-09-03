@@ -22,7 +22,9 @@ public class Cliente {
     private String email;
     private Integer idade;
     private LocalDate dataNascimento;
+    private Boolean ativo;
     @Embedded
     private Endereco endereco;
+
 
 }

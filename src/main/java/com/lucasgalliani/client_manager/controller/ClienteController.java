@@ -18,7 +18,7 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    @PostMapping("/cadastro")
+    @PostMapping("/cadastrar")
     public ResponseEntity<ClienteResponseDto> cadastrarClientes(@RequestBody @Valid ClienteDto clienteDto) {
         return ResponseEntity.ok(clienteService.cadastrarCliente(clienteDto));
     }
@@ -31,5 +31,18 @@ public class ClienteController {
     @GetMapping("/listar/{cpf}")
     public ResponseEntity<ClienteResponseDto> obterTodosOsClientesPorCpf(@PathVariable String cpf) {
         return ResponseEntity.ok(clienteService.listarPorCpf(cpf));
+    }
+
+    @PutMapping("/atualizar/{cpf}")
+    public ResponseEntity<ClienteResponseDto> atualizarCadastroClientePorCpf(@PathVariable String cpf, @RequestBody ClienteDto dto) {
+
+        ClienteResponseDto response = clienteService.atualizarCliente(cpf, dto);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/deletar/{cpf}")
+    public ResponseEntity<ClienteResponseDto> deletarCadastroClientePorCpf(@PathVariable String cpf) {
+        clienteService.deleteCadastroCliente(cpf);
+        return ResponseEntity.noContent().build();
     }
 }

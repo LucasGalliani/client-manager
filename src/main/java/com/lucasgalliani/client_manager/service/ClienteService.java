@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +31,7 @@ public class ClienteService {
             throw new CpfNuloException("CPF não pode ser vazio!");
         }
 
-        if(clienteRepository.existsByCpf(dto.cpf())){
+        if (clienteRepository.existsByCpf(dto.cpf())) {
             throw new CpfJaCadastradoException("CPF já cadastrado!");
         }
 
@@ -41,6 +40,7 @@ public class ClienteService {
         cliente.setCpf(dto.cpf());
         cliente.setEmail(dto.email());
         cliente.setIdade(dto.idade());
+        cliente.setAtivo(dto.ativo());
         cliente.setDataNascimento(dto.dataNascimento());
 
         Endereco endereco = new Endereco();
@@ -59,16 +59,16 @@ public class ClienteService {
         return clienteMapper.toResponse(save);
     }
 
-    public List<ClienteResponseDto> listarTodosClientes(){
+    public List<ClienteResponseDto> listarTodosClientes() {
 
-        return clienteRepository.findAll()
+        return clienteRepository.findAllByAtivoTrue()
                 .stream()
                 .map(clienteMapper::toResponse)
                 .collect(Collectors.toList());
 
     }
 
-    public ClienteResponseDto listarPorCpf(String cpf){
+    public ClienteResponseDto listarPorCpf(String cpf) {
 
         Cliente cliente = clienteRepository.findByCpf(cpf)
                 .orElseThrow(() -> new CpfNuloException("CPF não encontrado: " + cpf));
@@ -77,4 +77,75 @@ public class ClienteService {
 
     }
 
+    public ClienteResponseDto atualizarCliente(String cpf, ClienteDto dto) {
+
+        Cliente cliente = clienteRepository.findByCpf(cpf)
+                .orElseThrow(() -> new CpfNuloException("CPF não encontrado: " + cpf));
+
+        if (dto.nome() != null) {
+            cliente.setNome(dto.nome());
+        }
+
+        if (dto.cpf() != null) {
+            cliente.setCpf(dto.cpf());
+        }
+
+        if (dto.email() != null) {
+            cliente.setEmail(dto.email());
+        }
+
+        if (dto.idade() != null) {
+            cliente.setIdade(dto.idade());
+        }
+
+        if (dto.dataNascimento() != null) {
+            cliente.setDataNascimento(dto.dataNascimento());
+        }
+
+        if (dto.ativo() != null) {
+            cliente.setAtivo(dto.ativo());
+        }
+
+        if (dto.endereco() != null) {
+            Endereco endereco = cliente.getEndereco();
+            if (endereco == null) {
+                endereco = new Endereco();
+                cliente.setEndereco(endereco);
+            }
+
+            if (dto.endereco().logradouro() != null) {
+                endereco.setLogradouro(dto.endereco().logradouro());
+            }
+            if (dto.endereco().numero() != null) {
+                endereco.setNumero(dto.endereco().numero());
+            }
+            if (dto.endereco().bairro() != null) {
+                endereco.setBairro(dto.endereco().bairro());
+            }
+            if (dto.endereco().estado() != null) {
+                endereco.setEstado(dto.endereco().estado());
+            }
+            if (dto.endereco().cidade() != null) {
+                endereco.setCidade(dto.endereco().cidade());
+            }
+            if (dto.endereco().cep() != null) {
+                endereco.setCep(dto.endereco().cep());
+            }
+
+        }
+        Cliente clienteAtualizado = clienteRepository.save(cliente);
+        return clienteMapper.toResponse(clienteAtualizado);
+    }
+
+    public ClienteResponseDto deleteCadastroCliente(String cpf) {
+
+        Cliente cliente = clienteRepository.findByCpf(cpf)
+                .orElseThrow(() -> new CpfNuloException("CPF não encontrado: " + cpf));
+
+        cliente.setAtivo(false);
+        Cliente save = clienteRepository.save(cliente);
+
+        return clienteMapper.toResponse(save);
+
+    }
 }

@@ -15,6 +15,7 @@ public record ClienteDto(
         String email,
         Integer idade,
         LocalDate dataNascimento,
+        Boolean ativo,
         EnderecoDto endereco) {
 
 }

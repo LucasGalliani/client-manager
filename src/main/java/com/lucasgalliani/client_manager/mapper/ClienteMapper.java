@@ -15,7 +15,7 @@ public class ClienteMapper {
                 cliente.getEndereco().getNumero(), cliente.getEndereco().getTipoMoradia(), cliente.getEndereco().getBairro(),
                 cliente.getEndereco().getEstado(), cliente.getEndereco().getCidade(), cliente.getEndereco().getCep());
 
-        ClienteDto clienteDto = new ClienteDto(cliente.getNome(),cliente.getCpf(), cliente.getEmail(), cliente.getIdade(), cliente.getDataNascimento(), enderecoDto);
+        ClienteDto clienteDto = new ClienteDto(cliente.getNome(),cliente.getCpf(), cliente.getEmail(), cliente.getIdade(), cliente.getDataNascimento(),cliente.getAtivo(),enderecoDto);
 
         return new ClienteResponseDto(clienteDto);
     }
