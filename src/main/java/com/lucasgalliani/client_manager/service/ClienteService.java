@@ -137,7 +137,7 @@ public class ClienteService {
         return clienteMapper.toResponse(clienteAtualizado);
     }
 
-    public ClienteResponseDto deleteCadastroCliente(String cpf) {
+    public void deleteCadastroCliente(String cpf) {
 
         Cliente cliente = clienteRepository.findByCpf(cpf)
                 .orElseThrow(() -> new CpfNuloException("CPF não encontrado: " + cpf));
@@ -145,7 +145,7 @@ public class ClienteService {
         cliente.setAtivo(false);
         Cliente save = clienteRepository.save(cliente);
 
-        return clienteMapper.toResponse(save);
+        clienteMapper.toResponse(save);
 
     }
 }
